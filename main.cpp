@@ -16,6 +16,8 @@ struct studentStruct
     int year;
 };
 
+class Course;
+
 class Student
 {
 public:
@@ -33,7 +35,7 @@ public:
 
 private:
     studentStruct student;
-    std::vector<courseStruct> Courses;
+    std::vector<Course> Courses;
 };
 
 
@@ -53,7 +55,7 @@ public:
         return false;
     }
 
-    void EntrollStudent(Student student) {
+    void EnrollStudent(Student student) {
         std::string name = student.getName();
         bool isInClass = checkStudentInCourse(name);
         if (isInClass) { std::cout << "Student " << name << " is already enrolled in the class." << std::endl; return; };
@@ -95,18 +97,52 @@ class School
         std::string name;
         std::vector<Student> EnrolledStudents;
         std::vector<Course> Courses;
-
-
+        
 };
+
+School Akademiet("Akademiet VGS");
 
 int main()
 {
-    Student Kjell(studentStruct{
-        .name = "Kjell",
+    Student Matthias(studentStruct{
+        .name = "Matthias",
         .age = 20,
         .year = 2
     });
+    
+    Student Eilert(studentStruct{
+        .name = "Eilert",
+        .age = 22,
+        .year = 4
+    });
+    Student Sindre(studentStruct{
+        .name = "Sindre",
+        .age = 19,
+        .year = 1
+    });
 
+    Course CS(courseStruct{
+        .name = "Computer Science",
+        .description = "How computers work",
+        .maxStudents = 20
+    });
+
+    Course MP(courseStruct{
+        .name = "Media Production",
+        .description = "Produce media content",
+        .maxStudents = 15
+    });
+
+    Akademiet.addCourse(CS);
+    Akademiet.addCourse(MP);
+
+    Akademiet.addStudent(Eilert);
+    Akademiet.addStudent(Matthias);
+    Akademiet.addStudent(Sindre);
+
+    CS.EnrollStudent(Matthias);
+    CS.EnrollStudent(Sindre);
+    MP.EnrollStudent(Eilert);
 
     std::cin.get();
     return 0;
