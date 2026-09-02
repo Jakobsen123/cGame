@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <random>
 
 struct courseStruct
 {
@@ -15,7 +14,6 @@ struct studentStruct
     std::string name;
     int age;
     int year;
-    std::vector<courseStruct> Courses;
 };
 
 class Student
@@ -29,12 +27,13 @@ public:
     std::string getName() const {
         return student.name;
     }
-    void enroll(Course course) {
-        student.Courses.emplace_back(course);
+    void enroll(const Course& course) {
+        Courses.emplace_back(course);
     } 
 
 private:
     studentStruct student;
+    std::vector<courseStruct> Courses;
 };
 
 
@@ -62,17 +61,53 @@ public:
         std::cout << "Student " << name << " has been added to course " << course.name << std::endl;
     }
 
+    std::string getName() {
+        return course.name;
+    }
+
 private:
     courseStruct course;
     std::vector<Student> entrolledStudents;
-
     void addStudent(const Student& stud) {
         entrolledStudents.emplace_back(stud);
     }
 };
 
+    
+class School 
+{
+    public:
+        School(std::string nameVar) {
+            name = nameVar;
+        };
+
+        void addStudent(const Student& student) {
+            std::string name = student.getName();
+            EnrolledStudents.emplace_back(student);
+            std::cout << "Enrolled student " << name << " in " << name << std::endl;   
+        };
+        void addCourse(Course course) {
+            std::string course_name = course.getName();
+            Courses.emplace_back(course);
+            std::cout << "Added course " << course_name << "." << std::endl;
+        };
+    private:
+        std::string name;
+        std::vector<Student> EnrolledStudents;
+        std::vector<Course> Courses;
+
+
+};
+
 int main()
 {
+    Student Kjell(studentStruct{
+        .name = "Kjell",
+        .age = 20,
+        .year = 2
+    });
+
+
     std::cin.get();
     return 0;
 }
