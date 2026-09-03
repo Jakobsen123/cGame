@@ -17,92 +17,54 @@ struct studentStruct
     int year;
 };
 
-template <typename T>
-void outputData(const std::vector<T> &data)
-{
-    for (const auto &element : data)
-    {
-        std::cout << element.getName() << std::endl;
-    }
-}
-
-class Course;
-
-class Student
-{
-public:
-    Student(studentStruct studentVar)
-    {
-        student = studentVar;
-    };
-
-    std::string getName() const
-    {
-        return student.name;
-    }
-    void enroll(const Course &course)
-    {
-        studentCourses.emplace_back(course);
-    }
-    std::vector<Course> getCourses()
-    {
-        return studentCourses;
-    }
-
-private:
-    studentStruct student;
-    std::vector<Course> studentCourses;
-};
+class Student;
 
 class Course
 {
 public:
-    Course(courseStruct courseVar)
-    {
-        course = courseVar;
-    };
+    Course(courseStruct courseVar) { course = courseVar; }
 
     bool checkStudentInCourse(const std::string &name)
     {
-        for (const auto &student : enrolledStudents)
-        {
-            if (student.getName() == name)
-            {
-                return true;
-            };
-        }
-        return false;
-    };
-    void EnrollStudent(Student &student)
-    {
-        std::string name = student.getName();
-        bool isInClass = checkStudentInCourse(name);
-        if (isInClass)
-        {
-            std::cout << "Student " << name << " is already enrolled in the class." << std::endl;
-            return;
-        };
-        addStudent(student);
-        student.enroll(course);
-        std::cout << "Student " << name << " has been added to course " << course.name << std::endl;
+        return std::find(enrolledStudentNames.begin(), enrolledStudentNames.end(), name) != enrolledStudentNames.end();
     }
 
-    std::string getName() const
-    {
-        return course.name;
-    }
+    std::string getName() const { return course.name; }
 
-    std::vector<Student> getEnrolledStudents()
-    {
-        return enrolledStudents;
-    }
+    std::vector<std::string> getEnrolledStudentNames() const { return enrolledStudentNames; }
+
+    void EnrollStudent(Student &student);
 
 private:
     courseStruct course;
-    std::vector<Student> enrolledStudents;
-    void addStudent(const Student &stud)
+    std::vector<std::string> enrolledStudentNames;
+};
+
+class Student
+{
+public:
+    Student(studentStruct studentVar) { student = studentVar; }
+
+    std::string getName() const { return student.name; }
+
+    void enroll(const std::string &courseName) { studentCourseNames.push_back(courseName); }
+
+    std::vector<std::string> getCourses() const { return studentCourseNames; }
+
+private:
+    studentStruct student;
+    std::vector<std::string> studentCourseNames;
+    void EnrollStudent(Student &student)
     {
-        enrolledStudents.emplace_back(stud);
+        std::string name = student.getName();
+        if (checkStudentInCourse(name))
+        {
+            std::cout << "Student " << name << " is already enrolled in the class." << std::endl;
+            return;
+        }
+        enrolledStudentNames.push_back(name);
+        student.enroll(course.name);
+        std::cout << "Student " << name << " has been added to course " << course.name << std::endl;
     }
 };
 
@@ -126,11 +88,6 @@ public:
         Courses.emplace_back(course);
         std::cout << "Added course " << course_name << "." << std::endl;
     };
-    void Expell(const Student &student)
-    {
-        std::erase(EnrolledStudents, student);
-        std::cout << "Expelled student " << student.getName() << "\n";
-    }
 
 private:
     std::string name;
@@ -187,11 +144,11 @@ int main()
     MP.EnrollStudent(Erik);
     MP.EnrollStudent(Petter);
 
-    Akademiet.Expell(Matthias);
-
-    std::vector<Course> ErikData = Erik.getCourses();
-    outputData(ErikData);
-
+    std::vector<std::string> ErikData = Erik.getCourses();
+    for (const auto &courseName : ErikData)
+    {
+        std::cout << courseName << std::endl;
+    }
     std::cin.get();
     return 0;
 }
