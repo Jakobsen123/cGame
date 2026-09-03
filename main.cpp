@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 struct courseStruct
 {
@@ -117,7 +118,7 @@ public:
     {
         std::string name = student.getName();
         EnrolledStudents.emplace_back(student);
-        std::cout << "Enrolled student " << name << " in " << name << std::endl;
+        std::cout << "Enrolled student " << name << " in " << name << "\n";
     };
     void addCourse(Course course)
     {
@@ -125,6 +126,11 @@ public:
         Courses.emplace_back(course);
         std::cout << "Added course " << course_name << "." << std::endl;
     };
+    void Expell(const Student &student)
+    {
+        std::erase(EnrolledStudents, student);
+        std::cout << "Expelled student " << student.getName() << "\n";
+    }
 
 private:
     std::string name;
@@ -180,6 +186,8 @@ int main()
     MP.EnrollStudent(Eilert);
     MP.EnrollStudent(Erik);
     MP.EnrollStudent(Petter);
+
+    Akademiet.Expell(Matthias);
 
     std::vector<Course> ErikData = Erik.getCourses();
     outputData(ErikData);
